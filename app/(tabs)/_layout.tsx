@@ -1,5 +1,6 @@
+import BottomSheet from '@gorhom/bottom-sheet';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 import { Link, Tabs } from 'expo-router';
 import { Pressable, useColorScheme } from 'react-native';
@@ -23,7 +24,7 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const [toggleModal, setToggleModal] = useState(false);
-
+  const floatingRef = useRef<FloatingAction>(null);
   return (
     <>
       <Tabs
@@ -75,11 +76,28 @@ export default function TabLayout() {
       </Tabs>
       <FloatingAction
         position={'center'}
-        onPressMain={() => {
-          setToggleModal(!toggleModal);
+        ref={floatingRef}
+        onOpen={() => {
+          setToggleModal(true);
+          if (floatingRef.current) {
+            floatingRef.current.setState({
+              active: true,
+              shouldRender: true,
+            });
+          }
         }}
+        onClose={() => {
+          setToggleModal(false);
+        }}
+        onStateChange={() => floatingRef.current?.render()}
+        animated={false}
+        showBackground={true}
       />
-      {toggleModal && <ReceiptModal />}
+      {toggleModal && (
+        <BottomSheet snapPoints={['25%']} style={{ backgroundColor: 'black' }}>
+          <ReceiptModal setToggleModal={setToggleModal} />
+        </BottomSheet>
+      )}
     </>
   );
 }

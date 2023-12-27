@@ -4,7 +4,10 @@ import { View, Text, StyleSheet, Modal } from 'react-native';
 import CameraScan from './CameraScan';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function ReceiptModal() {
+interface IReceiptModal {
+  setToggleModal: (val: boolean) => void;
+}
+export default function ReceiptModal({ setToggleModal }: IReceiptModal) {
   const [scanEnable, setScanEnable] = useState(false);
 
   const handleScanReceipt = () => {
@@ -26,7 +29,7 @@ export default function ReceiptModal() {
         </TouchableOpacity>
       </View>
       <View style={styles.contentContainer}>
-        <TouchableOpacity onPress={handleScanReceipt}>
+        <TouchableOpacity onPress={() => setToggleModal(false)}>
           <Text style={styles.text}>Cancel</Text>
         </TouchableOpacity>
       </View>
@@ -39,25 +42,18 @@ export default function ReceiptModal() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'column',
-    position: 'absolute',
-    width: '100%',
-    height: '25%',
-    bottom: 1,
-    padding: 24,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: 'darkgrey',
-    gap: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 36,
+    justifyContent: 'center',
+    backgroundColor: 'inherit',
+    gap: 16,
   },
   contentContainer: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    width: '100%',
+    padding: 10,
     borderWidth: 1,
-    alignItems: 'center',
     backgroundColor: 'white',
   },
   text: {
